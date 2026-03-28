@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Johnny's Wet Goods</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+  :root {
+    --green-dark:  #1a4d2e;
+    --green-light: #e8f5e9;
+    --green-mid:   #2d7a4f;
+    --green-line:  #4caf7d;
+    --red:         #c0392b;
+    --bg:          #ffffff;
+    --surface:     #f7f9f7;
+    --border:      #dde8e0;
+    --text:        #1a1a1a;
+    --muted:       #7a8f80;
+    --white:       #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--green-dark);
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 4px solid var(--green-line);
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  header p {
+    font-size: 0.8rem;
+    color: var(--green-line);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  /* META BAR */
+  .meta-bar {
+    background: var(--green-light);
+    padding: 14px 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta-field { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; }
+
+  .meta-field label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--green-dark);
+    font-weight: 600;
+  }
+
+  .meta-field input {
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 7px 10px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .meta-field input:focus { border-color: var(--green-dark); }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    padding: 13px 22px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-bottom: -2px;
+  }
+
+  .tab-btn.active { color: var(--green-dark); border-bottom-color: var(--green-dark); }
+
+  .tab-btn .badge {
+    display: inline-block;
+    background: var(--green-dark);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ENTRY TAB */
+  .entry-wrap { padding: 0 10px 12px; }
+
+  .col-header {
+    display: grid;
+    grid-template-columns: 1fr 58px 58px 58px 58px;
+    gap: 4px;
+    padding: 10px 10px 7px;
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 6px;
+  }
+
+  .col-header span {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .col-header span:first-child { text-align: left; color: var(--green-dark); }
+  .col-header .col-total { color: var(--red); }
+
+  .group-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 8px;
+  }
+
+  .group-divider .dline { flex: 1; height: 2px; background: var(--green-line); border-radius: 2px; }
+
+  .group-divider .dlabel {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    color: var(--green-dark);
+    background: var(--green-light);
+    padding: 3px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--green-line);
+    white-space: nowrap;
+  }
+
+  .drink-row {
+    display: grid;
+    grid-template-columns: 1fr 58px 58px 58px 58px;
+    gap: 4px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    margin-bottom: 5px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .drink-row:focus-within {
+    border-color: var(--green-dark);
+    box-shadow: 0 0 0 2px var(--green-light);
+  }
+
+  .drink-name { font-size: 0.82rem; font-weight: 500; color: var(--text); line-height: 1.2; }
+
+  .qty-input {
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: 6px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .qty-input:focus { border-color: var(--green-dark); }
+  .qty-input.has-value { color: var(--green-dark); font-weight: 700; }
+
+  .row-total { font-size: 0.95rem; font-weight: 800; text-align: center; color: var(--muted); }
+  .row-total.has-val { color: var(--red); }
+
+  /* SUMMARY TAB */
+  .summary-wrap { padding: 14px 12px; }
+
+  .shift-info {
+    background: var(--green-dark);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 0.8rem;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .shift-info strong { color: var(--green-line); }
+
+  .section-chips { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+
+  .section-chip {
+    background: var(--green-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  .sc-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--green-dark); font-weight: 700; }
+  .sc-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--green-dark); line-height: 1.1; }
+
+  .grand-bar {
+    background: var(--green-dark);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .gb-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--green-line); }
+  .gb-num   { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; }
+
+  /* Summary table — fixed layout so columns always align */
+  .sum-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+  }
+
+  .sum-table colgroup col:first-child { width: auto; }
+  .sum-table colgroup col { width: 58px; }
+
+  .sum-table thead tr { background: var(--green-dark); color: var(--white); }
+
+  .sum-table thead th {
+    padding: 9px 4px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .sum-table thead th:first-child { text-align: left; padding-left: 12px; }
+  .sum-table thead th.th-total { color: #ff8a80; }
+
+  .sum-table tbody tr { border-bottom: 1px solid var(--border); }
+  .sum-table tbody tr:last-child { border-bottom: none; }
+
+  .sum-table tbody tr.group-row td {
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 5px 12px;
+    border-top: 2px solid var(--green-line);
+  }
+
+  .sum-table tbody td {
+    padding: 8px 4px;
+    text-align: center;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  .sum-table tbody td:first-child { text-align: left; padding-left: 12px; font-weight: 500; }
+  .sum-table tbody td.td-total { color: var(--red); font-weight: 800; }
+  .sum-table tbody td.td-zero  { color: var(--border); }
+
+  /* HISTORY TAB */
+  .history-wrap { padding: 14px 12px; }
+
+  .history-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-bottom: 9px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .history-item:hover { border-color: var(--green-dark); box-shadow: 0 2px 8px rgba(26,77,46,0.1); }
+
+  .hi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .hi-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--green-dark); }
+  .hi-total { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--red); }
+  .hi-meta  { font-size: 0.73rem; color: var(--muted); margin-top: 2px; }
+
+  .hi-delete {
+    background: none; border: none; color: var(--muted);
+    font-size: 1rem; cursor: pointer; padding: 2px 6px;
+    border-radius: 4px; margin-left: 8px; transition: color 0.2s;
+  }
+  .hi-delete:hover { color: var(--red); }
+
+  .empty-msg { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 0.85rem; }
+
+  /* ACTION BAR */
+  .action-btns {
+    display: flex; gap: 8px; padding: 12px 14px;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--white); border-top: 2px solid var(--border); z-index: 200;
+  }
+
+  .btn {
+    flex: 1; padding: 12px 6px; border: none; border-radius: 8px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem;
+    letter-spacing: 1.5px; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.97); }
+  .btn-primary   { background: var(--green-dark); color: var(--white); }
+  .btn-secondary { background: var(--surface); color: var(--green-dark); border: 1px solid var(--border); }
+  .btn-view      { background: var(--green-light); color: var(--green-dark); border: 1px solid var(--green-line); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--green-dark); color: var(--white);
+    padding: 10px 22px; border-radius: 20px;
+    font-weight: 600; font-size: 0.82rem; opacity: 0;
+    transition: all 0.25s; z-index: 999; white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Johnny's Wet Goods</h1>
+  <p>Shift Check List</p>
+</header>
+
+<div class="meta-bar">
+  <div class="meta-field">
+    <label>Server</label>
+    <input type="text" id="server" placeholder="Your name">
+  </div>
+  <div class="meta-field">
+    <label>Manager</label>
+    <input type="text" id="manager" placeholder="Manager name">
+  </div>
+  <div class="meta-field">
+    <label>Date</label>
+    <input type="date" id="date">
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('entry')">📋 Entry</button>
+  <button class="tab-btn" onclick="switchTab('summary')">📊 Summary</button>
+  <button class="tab-btn" onclick="switchTab('history')">🕐 History <span class="badge" id="hist-badge">0</span></button>
+</div>
+
+<!-- ENTRY TAB -->
+<div class="tab-pane active" id="tab-entry">
+  <div class="entry-wrap">
+    <div class="col-header">
+      <span>Item</span>
+      <span>Cafe/NA</span>
+      <span>30's</span>
+      <span>80's</span>
+      <span class="col-total">Total</span>
+    </div>
+    <div id="drink-list"></div>
+  </div>
+</div>
+
+<!-- SUMMARY TAB -->
+<div class="tab-pane" id="tab-summary">
+  <div class="summary-wrap" id="summary-content"></div>
+</div>
+
+<!-- HISTORY TAB -->
+<div class="tab-pane" id="tab-history">
+  <div class="history-wrap" id="history-list"></div>
+</div>
+
+<div class="action-btns">
+  <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+  <button class="btn btn-primary"   onclick="saveList()">Save</button>
+  <button class="btn btn-view"      onclick="switchTab('summary')">Summary</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CANS = [
+  { id: 'reg_coke',    name: 'Regular Coke' },
+  { id: 'diet_coke',   name: 'Diet Coke' },
+  { id: 'ginger_ale',  name: 'Ginger Ale' },
+  { id: 'sprite',      name: 'Sprite' },
+  { id: 'club_soda',   name: 'Club Soda' },
+  { id: 'tonic',       name: 'Tonic' },
+  { id: 'cran_juice',  name: 'Cranberry Juice' },
+  { id: 'grape_juice', name: 'Grapefruit Juice' },
+  { id: 'pine_juice',  name: 'Pineapple Juice' },
+  { id: 'tom_juice',   name: 'Tomato Juice' },
+];
+
+const GLASS = [
+  { id: 'mex_coke',    name: 'Mexican Coke' },
+  { id: 'ginger_beer', name: 'Ginger Beer' },
+  { id: 'root_beer',   name: 'Root Beer' },
+  { id: 'jarr_lime',   name: 'Jarritos Lime' },
+  { id: 'jarr_mand',   name: 'Jarritos Mandarin' },
+  { id: 'jarr_grape',  name: 'Jarritos Grape' },
+  { id: 'spark_water', name: 'Sparkling Water' },
+  { id: 'still_water', name: 'Still Water' },
+];
+
+const ALL_DRINKS = [...CANS, ...GLASS];
+const SEC_KEYS   = ['na', 's30', 's80'];
+const SECTIONS   = ['Cafe/NA', "30's", "80's"];
+
+let history = [];
+
+// STORAGE
+async function loadData() {
+  try { const r = await window.storage.get('wg_history'); if (r) history = JSON.parse(r.value); } catch(e) { history=[]; }
+  renderHistory();
+  renderDrinkList();
+}
+
+async function saveData() {
+  try { await window.storage.set('wg_history', JSON.stringify(history)); } catch(e) {}
+}
+
+// RENDER ENTRY
+function makeRow(d) {
+  const row = document.createElement('div');
+  row.className = 'drink-row';
+  row.id = 'row-' + d.id;
+  row.innerHTML =
+    `<div class="drink-name">${d.name}</div>` +
+    SEC_KEYS.map(s =>
+      `<input class="qty-input" type="number" min="0" inputmode="numeric"
+        id="${d.id}_${s}" placeholder="—"
+        oninput="updateTotal('${d.id}')">`
+    ).join('') +
+    `<div class="row-total" id="total_${d.id}">—</div>`;
+  return row;
+}
+
+function makeDivider(label) {
+  const div = document.createElement('div');
+  div.className = 'group-divider';
+  div.innerHTML = `<div class="dline"></div><div class="dlabel">${label}</div><div class="dline"></div>`;
+  return div;
+}
+
+function renderDrinkList() {
+  const list = document.getElementById('drink-list');
+  list.innerHTML = '';
+  list.appendChild(makeDivider('🥤 Cans'));
+  CANS.forEach(d => list.appendChild(makeRow(d)));
+  list.appendChild(makeDivider('🍾 Glass'));
+  GLASS.forEach(d => list.appendChild(makeRow(d)));
+}
+
+// TOTALS
+function getVal(id) { return parseInt(document.getElementById(id)?.value) || 0; }
+
+function updateTotal(drinkId) {
+  const t = SEC_KEYS.reduce((s,k) => s + getVal(`${drinkId}_${k}`), 0);
+  const el = document.getElementById(`total_${drinkId}`);
+  if (!el) return;
+  el.textContent = t > 0 ? t : '—';
+  el.className = 'row-total' + (t > 0 ? ' has-val' : '');
+  SEC_KEYS.forEach(k => {
+    const inp = document.getElementById(`${drinkId}_${k}`);
+    if (inp) inp.classList.toggle('has-value', (parseInt(inp.value)||0) > 0);
+  });
+}
+
+// BUILD SUMMARY DATA
+function buildData() {
+  const items = []; let grand = 0;
+  const secTotals = { na:0, s30:0, s80:0 };
+  ALL_DRINKS.forEach(d => {
+    const sv = {}; let rt = 0;
+    SEC_KEYS.forEach(k => { const v=getVal(`${d.id}_${k}`); sv[k]=v; rt+=v; secTotals[k]+=v; });
+    if (rt > 0) { items.push({ ...d, ...sv, total:rt, isGlass: GLASS.some(g=>g.id===d.id) }); grand+=rt; }
+  });
+  return { items, secTotals, grand };
+}
+
+// RENDER SUMMARY
+function renderSummary() {
+  const { items, secTotals, grand } = buildData();
+  const el = document.getElementById('summary-content');
+  const server  = document.getElementById('server').value  || '—';
+  const manager = document.getElementById('manager').value || '—';
+  const date    = document.getElementById('date').value    || '—';
+
+  if (!items.length) {
+    el.innerHTML = `<div class="empty-msg">No quantities entered yet.<br>Fill out the Entry tab first.</div>`;
+    return;
+  }
+
+  const cans  = items.filter(i => !i.isGlass);
+  const glass = items.filter(i =>  i.isGlass);
+
+  function rows(arr) {
+    return arr.map(i => `
+      <tr>
+        <td>${i.name}</td>
+        ${SEC_KEYS.map(k=>`<td class="${i[k]?'':'td-zero'}">${i[k]||'—'}</td>`).join('')}
+        <td class="td-total">${i.total}</td>
+      </tr>`).join('');
+  }
+
+  el.innerHTML = `
+    <div class="shift-info">
+      <span>📅 <strong>${date}</strong></span>
+      <span>👤 Server: <strong>${server}</strong></span>
+      <span>🏷 Manager: <strong>${manager}</strong></span>
+    </div>
+
+    <div class="section-chips">
+      ${SECTIONS.map((s,i)=>`
+        <div class="section-chip">
+          <div class="sc-label">${s}</div>
+          <div class="sc-num">${secTotals[SEC_KEYS[i]]}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="grand-bar">
+      <span class="gb-label">Grand Total</span>
+      <span class="gb-num">${grand}</span>
+    </div>
+
+    <table class="sum-table">
+      <colgroup>
+        <col>
+        <col><col><col><col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Cafe/NA</th>
+          <th>30's</th>
+          <th>80's</th>
+          <th class="th-total">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${cans.length  ? `<tr class="group-row"><td colspan="5">🥤 Cans</td></tr>${rows(cans)}`  : ''}
+        ${glass.length ? `<tr class="group-row"><td colspan="5">🍾 Glass</td></tr>${rows(glass)}` : ''}
+      </tbody>
+    </table>`;
+}
+
+// TABS
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    if(b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active');
+  });
+  if (name==='summary') renderSummary();
+}
+
+// SAVE / CLEAR
+function saveList() {
+  const { items, secTotals, grand } = buildData();
+  if (!items.length) { showToast('Enter quantities first'); return; }
+  const entry = {
+    id: Date.now(),
+    date:    document.getElementById('date').value || new Date().toLocaleDateString(),
+    server:  document.getElementById('server').value,
+    manager: document.getElementById('manager').value,
+    savedAt: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    items, secTotals, grand
+  };
+  history.unshift(entry);
+  if (history.length > 30) history.pop();
+  saveData(); renderHistory();
+  showToast('List saved ✓');
+}
+
+function clearForm() {
+  if (!confirm('Clear all quantities? Saved lists are kept.')) return;
+  ALL_DRINKS.forEach(d => {
+    SEC_KEYS.forEach(k => {
+      const el = document.getElementById(`${d.id}_${k}`);
+      if (el) { el.value=''; el.classList.remove('has-value'); }
+    });
+    const t = document.getElementById(`total_${d.id}`);
+    if (t) { t.textContent='—'; t.className='row-total'; }
+  });
+  ['server','manager','date'].forEach(id => document.getElementById(id).value='');
+}
+
+// HISTORY
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  document.getElementById('hist-badge').textContent = history.length;
+  if (!history.length) { el.innerHTML=`<div class="empty-msg">No saved lists yet.</div>`; return; }
+  el.innerHTML = history.map(h=>`
+    <div class="history-item" onclick="loadHistory(${h.id})">
+      <div class="hi-top">
+        <div>
+          <div class="hi-date">${h.date} · ${h.savedAt||''}</div>
+          <div class="hi-meta">Server: ${h.server||'—'} · Mgr: ${h.manager||'—'}</div>
+        </div>
+        <div style="display:flex;align-items:center">
+          <span class="hi-total">${h.grand} items</span>
+          <button class="hi-delete" onclick="event.stopPropagation();delHistory(${h.id})">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function loadHistory(id) {
+  const h = history.find(x=>x.id===id); if(!h) return;
+  ALL_DRINKS.forEach(d => SEC_KEYS.forEach(k=>{
+    const el=document.getElementById(`${d.id}_${k}`); if(el) el.value='';
+  }));
+  h.items.forEach(item => {
+    const d = ALL_DRINKS.find(x=>x.id===item.id);
+    if (d) {
+      SEC_KEYS.forEach(k=>{
+        const el=document.getElementById(`${d.id}_${k}`);
+        if(el&&item[k]){el.value=item[k];el.classList.add('has-value');}
+      });
+      updateTotal(d.id);
+    }
+  });
+  document.getElementById('server').value  = h.server||'';
+  document.getElementById('manager').value = h.manager||'';
+  document.getElementById('date').value    = h.date||'';
+  switchTab('entry');
+  showToast('List loaded');
+}
+
+function delHistory(id) {
+  if (!confirm('Delete this saved list?')) return;
+  history = history.filter(x=>x.id!==id);
+  saveData(); renderHistory();
+}
+
+// TOAST
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// INIT
+document.getElementById('date').value = new Date().toISOString().split('T')[0];
+loadData();
+</script>
+</body>
+</html>
